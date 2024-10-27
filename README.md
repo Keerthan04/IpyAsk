@@ -46,7 +46,7 @@ IPyAsk works by utilizing a two-step process:
    - The query is embedded, and the top 5 relevant contexts are retrieved from **Pinecone**.
    - Using the **Gemini 1.5 Pro** model and **Vercel AI SDK**, the response is generated and streamed back to the user.
 
-![Architecture Flowchart](Images/architecture_flowchart.png)
+![Architecture Flowchart](Images/architecture_overview.png)
 
 ## Live Demo
 
