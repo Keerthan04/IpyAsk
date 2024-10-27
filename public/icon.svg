@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#F3F3F3"/>
+  
+  <!-- Jupyter-inspired notebook rings -->
+  <path d="M75 40 A60 60 0 1 1 125 40" fill="none" stroke="#f37b2d" stroke-width="12" stroke-linecap="round"/>
+  <path d="M75 160 A60 60 0 1 0 125 160" fill="none" stroke="#f37b2d" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Chat bubble / AI interaction representation -->
+  <path d="M100 70 L140 70 Q150 70 150 80 L150 110 Q150 120 140 120 L110 120 L100 135 L90 120 L60 120 Q50 120 50 110 L50 80 Q50 70 60 70 Z" 
+        fill="#f37b2d"/>
+  
+  <!-- Code dots representing Python/notebook cells -->
+  <circle cx="80" cy="95" r="5" fill="#F3F3F3"/>
+  <circle cx="100" cy="95" r="5" fill="#F3F3F3"/>
+  <circle cx="120" cy="95" r="5" fill="#F3F3F3"/>
+</svg>

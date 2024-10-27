@@ -1,101 +1,144 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import ChatComponent from "@/components/chatComponent";
+import { ModeToggle } from "@/components/ModeToggle";
+import NotebookComponent from "@/components/NotebookComponent";
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { toast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
+import { LogIn, Settings } from "lucide-react";
+import React, { ChangeEvent, useState } from "react";
+
+
+const Home = () => {
+  const [base64Data, setBase64Data] = useState("");
+  const [namespace,setnamespace] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirm,setconfirm] = useState("");
+  function handleReportSelection(event: ChangeEvent<HTMLInputElement>): void {
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+
+    if (file) {
+      let isValidDoc = false;
+      const validDocs = ["application/json"];
+      const validExtensions = [".ipynb"];
+
+      if (
+        validDocs.includes(file.type) ||
+        validExtensions.includes(file.name.slice(-6))
+      ) {
+        isValidDoc = true;
+      }
+
+      if (!isValidDoc) {
+        toast({
+          variant: "destructive",
+          description: "Unsupported file type! Please upload a .ipynb file.",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const jsonString = reader.result as string;
+        const base64String = btoa(unescape(encodeURIComponent(jsonString)));
+        setBase64Data(base64String);
+      };
+
+      reader.readAsText(file);
+    }
+  }
+  async function extractDetails(): Promise<void> {
+    if (!base64Data) {
+      toast({
+        variant: "destructive",
+        description:
+          "Upload a valid notebook! Please ensure the notebook is in .ipynb format.",
+      });
+      return;
+    }
+    setIsLoading(true);
+
+    const response = await fetch("api/extractnotebookgemini", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        base64: base64Data,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("data is \n",data);
+      setnamespace(data.namespace);
+      setconfirm("Notebook has been Added")
+      toast({
+        variant: "default",
+        description: "Notebook Updated Successfully you can now Chat!!!",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        description: "Failed to extract details from the notebook.",
+      });
+    }
+
+    setIsLoading(false);
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div className="grid h-screen w-full">
+      <div className="flex flex-col">
+        <header className="sticky top-0 z-10 flex h-[57px] bg-background items-center gap-1 border-b px-4">
+          <h1 className="text-xl font-semibold flex text-[#F37B2D]">
+            <LogIn />
+            <span className="flex flex-row">ipyAsk</span>
+          </h1>
+          <div className="w-full flex flex-row justify-end gap-2">
+            <ModeToggle />
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Settings className="h-[1.2rem] w-[1.2rem]" />
+                  <span className="sr-only">Settings</span>
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent className="max-h-[80vh]">
+                <NotebookComponent
+                  handleReportSelection={handleReportSelection}
+                  extractDetails={extractDetails}
+                />
+              </DrawerContent>
+            </Drawer>
+          </div>
+        </header>
+        <main
+          className="grid flex-1 gap-4 overflow-auto p-4
+        md:grid-cols-2
+        lg:grid-cols-3"
+        >
+          <div className="hidden md:flex flex-col">
+            {/* <SideComponent onReportConfirmation={onReportConfirmation} /> */}
+            <NotebookComponent
+              handleReportSelection={handleReportSelection}
+              extractDetails={extractDetails}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          </div>
+          <div className="lg:col-span-2">
+            <ChatComponent
+              confirm={confirm}
+              namespace={namespace}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;

@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IPyAsk - Your Jupyter Notebook AI Assistant
+
+IPyAsk is an innovative tool that helps users interact with their Jupyter notebooks using AI. Say goodbye to copy-pasting code into ChatGPT! IPyAsk allows you to upload your `.ipynb` files and ask contextual questions directly from your notebook, getting instant and accurate answers with the help of RAG (Retrieval-Augmented Generation) and Gemini AI.
+
+![IPyAsk Homepage](images/home-1.png)
+![IPyAsk Homepage](images/home-1.png)
+![IPyAsk Homepage](images/home-2.png)
+![IPyAsk Mobile Homepage](images/home-3.png)
+![IPyAsk Mobile Homepage](images/home-4.png)
+![Chat Response](images/ChatAnswer.png)
+
+## Features
+
+- **Smart Context Understanding**: IPyAsk comprehends your entire notebook, including code, comments, and outputs to give highly contextual answers.
+- **Code-Aware Responses**: Get precise answers based on your specific implementation and coding patterns.
+- **Gemini-Powered AI**: Leverage Google’s Gemini AI to assist with debugging, explaining code, and generating insights, while keeping your notebook context intact.
+- **Notebook Upload and Query**: Users can upload their Jupyter notebooks and get answers to their queries.
+- **RAG System**: Retrieves relevant content from the uploaded notebook to generate accurate responses.
+- **Vector Store Integration**: Ensures fast and context-aware retrieval from the notebook data.
+- **Next.js Frontend**: Provides an interactive and responsive user interface.
+- **Streaming AI Responses**: Powered by Vercel AI SDK for seamless conversation flow.
+
+## How It Works
+
+1. **Upload your Python notebook (.ipynb file)**: Start by uploading your Jupyter notebook.
+2. **Wait for the magic to work ✨**: Our system processes your notebook.
+3. **Ask questions**: Query anything related to your notebook, and IPyAsk will provide instant answers with full context from your code.
+
+![How It Works](images/how_it_works.png)
+
+## Pro Tip
+
+Add detailed markdown cells and code comments in your notebook for even more accurate and context-aware responses!
+
+## Project Architecture
+
+IPyAsk works by utilizing a two-step process:
+
+1. **Notebook Processing**:
+   - The uploaded notebook is encoded into a base64 string and sent to the API endpoint `/api/extractnotebookgemini`.
+   - The base64 string is decoded, and the notebook content is split into manageable chunks.
+   - These chunks are embedded using the **Gemini Text Embedding 004** model, and a unique namespace is created and stored in the **Pinecone vector store**.
+
+2. **Question Processing**:
+   - When a user asks a question, it is sent to the `/api/notebookchat` endpoint.
+   - The query is embedded, and the top 5 relevant contexts are retrieved from **Pinecone**.
+   - Using the **Gemini 1.5 Pro** model and **Vercel AI SDK**, the response is generated and streamed back to the user.
+
+![Architecture Flowchart](images/architecture_flowchart.png)
+
+## Live Demo
+
+Experience IPyAsk in action: [https://ipy-ask.vercel.app/](https://ipy-ask.vercel.app/)
+
+## Tech Stack
+
+IPyAsk leverages the following technologies:
+
+- **Next.js**
+- **Vercel AI SDK**
+- **LangChain**
+- **Gemini Embeddings**
+- **Pinecone Vector Store**
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js and npm
+- Git
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   git clone https://github.com/Keerthan04/IpyAsk.git
+   cd ipyask
+   ```
 
-## Learn More
+2. **Install dependencies**:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Set up credentials**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   To access the vector store, make sure you have the appropriate API keys. Please contact the repository owner for more details.
 
-## Deploy on Vercel
+4. **Start the development server**:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Open the application**:
+
+   Go to [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Usage
+
+1. **Upload your notebook** using the upload interface.
+
+2. **Ask your question** related to the notebook’s content.
+
+3. **Review the AI-generated answer** based on the relevant notebook sections.
+
+## Contributing
+
+IPyAsk is still in its early development phase, and this is just the first test version. We welcome all feedback to help improve and shape the project! Feel free to test it, report any issues, and suggest or implement fixes.
+
+Whether you're contributing bug fixes, adding new features, or enhancing the documentation, your contributions are valuable. Please submit pull requests or open issues, and let’s work together to make IPyAsk even better!
+
+## Contact
+
+For any inquiries, you can reach out at:
+
+- **GitHub**: [Keerthan04](https://github.com/Keerthan04)
+- **Email**: [ckeerthankumar4@gmail.com](mailto:ckeerthankumar4@gmail.com)
+
+## Acknowledgments
+
+- **Jupyter Project**
+- **Vercel** for hosting and AI SDK
+- **Pinecone** for vector storage
+- **All contributors and users**
+
+Thank you for checking out IPyAsk! I hope this tool enhances your Jupyter Notebook experience.
