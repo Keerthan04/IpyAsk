@@ -2,12 +2,12 @@
 
 IPyAsk is an innovative tool that helps users interact with their Jupyter notebooks using AI. Say goodbye to copy-pasting code into ChatGPT! IPyAsk allows you to upload your `.ipynb` files and ask contextual questions directly from your notebook, getting instant and accurate answers with the help of RAG (Retrieval-Augmented Generation) and Gemini AI.
 
-![IPyAsk Homepage](images/home-1.png)
-![IPyAsk Homepage](images/home-1.png)
-![IPyAsk Homepage](images/home-2.png)
-![IPyAsk Mobile Homepage](images/home-3.png)
-![IPyAsk Mobile Homepage](images/home-4.png)
-![Chat Response](images/ChatAnswer.png)
+![IPyAsk Homepage](Images/home-1.png)
+![IPyAsk Homepage](Images/home-1.png)
+![IPyAsk Homepage](Images/home-2.png)
+![IPyAsk Mobile Homepage](Images/home-3.png)
+![IPyAsk Mobile Homepage](Images/home-4.png)
+![Chat Response](Images/ChatAnswer.png)
 
 ## Features
 
@@ -26,7 +26,7 @@ IPyAsk is an innovative tool that helps users interact with their Jupyter notebo
 2. **Wait for the magic to work ✨**: Our system processes your notebook.
 3. **Ask questions**: Query anything related to your notebook, and IPyAsk will provide instant answers with full context from your code.
 
-![How It Works](images/how_it_works.png)
+![How It Works](Images/how_it_works.png)
 
 ## Pro Tip
 
@@ -46,7 +46,7 @@ IPyAsk works by utilizing a two-step process:
    - The query is embedded, and the top 5 relevant contexts are retrieved from **Pinecone**.
    - Using the **Gemini 1.5 Pro** model and **Vercel AI SDK**, the response is generated and streamed back to the user.
 
-![Architecture Flowchart](images/architecture_flowchart.png)
+![Architecture Flowchart](Images/architecture_flowchart.png)
 
 ## Live Demo
 
